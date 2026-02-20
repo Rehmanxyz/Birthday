@@ -1,26 +1,49 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Happy Birthday My Love ❤️</title>
+<title>For My Meena 💙</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 body {
     margin: 0;
-    background: linear-gradient(45deg, #ff4e50, #fc913a);
+    padding: 0;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    font-family: 'Segoe UI', sans-serif;
+    overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    font-family: Arial, sans-serif;
-    overflow: hidden;
 }
 
+/* Intro Screen */
+.intro {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #0f2027;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 28px;
+    letter-spacing: 2px;
+    transition: 1.5s ease;
+    z-index: 10;
+}
+
+.intro.fade {
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* Main Content */
 .container {
     text-align: center;
     color: white;
     opacity: 0;
-    transform: scale(0.5);
+    transform: scale(0.8);
     transition: 1.5s ease;
 }
 
@@ -35,30 +58,38 @@ h1 {
 }
 
 @keyframes glow {
-    from { text-shadow: 0 0 10px white; }
-    to { text-shadow: 0 0 30px pink; }
+    from { text-shadow: 0 0 10px #00c6ff; }
+    to { text-shadow: 0 0 30px #0072ff; }
+}
+
+p {
+    font-size: 20px;
+    max-width: 600px;
+    margin: auto;
+    margin-top: 20px;
 }
 
 button {
-    padding: 15px 30px;
+    margin-top: 30px;
+    padding: 12px 30px;
     font-size: 18px;
     border: none;
     border-radius: 30px;
-    background: white;
-    color: #ff4e50;
+    background: #00c6ff;
+    color: white;
     cursor: pointer;
     transition: 0.3s;
 }
 
 button:hover {
-    background: pink;
-    color: white;
+    background: #0072ff;
 }
 
+/* Floating Hearts */
 .heart {
     position: absolute;
-    color: white;
-    font-size: 20px;
+    color: #00c6ff;
+    font-size: 18px;
     animation: float 6s linear infinite;
 }
 
@@ -71,27 +102,38 @@ button:hover {
 
 <body>
 
+<div class="intro" id="intro">
+    Loading something special for Meena 💙
+</div>
+
 <div class="container" id="main">
-    <h1>Happy Birthday My Princess 💖</h1>
-    <p>I love you more than anything ❤️</p>
-    <button onclick="showMessage()">Click Me Baby 😘</button>
+    <h1>Happy Birthday Emaan 💙</h1>
+    <p>
+        My Dearest Meena,<br><br>
+        You are the most beautiful blessing in my life.  
+        Every moment with you feels like magic.  
+        I am so lucky to call you mine.  
+        May your smile always shine brighter than the stars. 💫  
+        I love you forever.<br><br>
+        — Yours always, Rehman 💙
+    </p>
+    <button onclick="loveNote()">Click Here My Love 💌</button>
 </div>
 
 <script>
-window.onload = function() {
-    setTimeout(() => {
-        document.getElementById("main").classList.add("show");
-    }, 500);
-}
+setTimeout(() => {
+    document.getElementById("intro").classList.add("fade");
+    document.getElementById("main").classList.add("show");
+}, 2500);
 
-function showMessage() {
-    alert("You are my happiness, my peace, my everything ❤️ Happy Birthday!");
+function loveNote() {
+    alert("Meena 💙 You are my peace, my happiness, my everything. Happy Birthday, my love. — Rehman");
 }
 
 function createHeart() {
     const heart = document.createElement("div");
     heart.classList.add("heart");
-    heart.innerHTML = "❤️";
+    heart.innerHTML = "💙";
     heart.style.left = Math.random() * 100 + "vw";
     heart.style.fontSize = Math.random() * 20 + 10 + "px";
     document.body.appendChild(heart);
