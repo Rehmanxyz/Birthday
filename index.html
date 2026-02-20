@@ -14,23 +14,25 @@ body {
     color:white;
 }
 
-/* Intro Overlay */
+/* Overlay for autoplay */
 #overlay {
-    position:fixed; top:0; left:0;
+    position: fixed;
+    top:0; left:0;
     width:100%; height:100%;
-    z-index:9999;
+    z-index:10000; /* on top */
+    cursor:pointer;
 }
 
-/* Intro Fade */
+/* Intro screen */
 .intro {
-    position:fixed;
+    position: fixed;
     width:100%; height:100%;
     background:#0f2027;
     display:flex; justify-content:center; align-items:center;
     font-size:28px; letter-spacing:2px;
     color:#00c6ff;
-    z-index:10;
     opacity:1; transition:2s ease;
+    z-index:10001; /* above fireworks */
 }
 .intro.fade { opacity:0; visibility:hidden; }
 
@@ -40,6 +42,8 @@ body {
     opacity:0;
     transform:scale(0.8);
     transition:1.5s ease;
+    z-index:10002; /* on top of overlay and fireworks */
+    position: relative;
 }
 .container.show {
     opacity:1;
@@ -51,8 +55,8 @@ h1 {
     animation: glow 2s infinite alternate;
 }
 @keyframes glow {
-    from { text-shadow: 0 0 10px #00c6ff; }
-    to { text-shadow: 0 0 40px #0072ff; }
+    from { text-shadow:0 0 10px #00c6ff; }
+    to { text-shadow:0 0 40px #0072ff; }
 }
 
 p {
@@ -78,10 +82,11 @@ p {
 
 /* Floating Hearts */
 .heart {
-    position:fixed;
+    position: fixed;
     color:#00c6ff;
     font-size:18px;
-    animation:float 6s linear infinite;
+    z-index:10003; /* above fireworks */
+    animation: float 6s linear infinite;
 }
 @keyframes float {
     from { transform: translateY(100vh); opacity:1; }
@@ -90,9 +95,11 @@ p {
 
 /* Fireworks canvas */
 #fireworks {
-    position:fixed; top:0; left:0;
+    position: fixed;
+    top:0; left:0;
     width:100%; height:100%;
-    pointer-events:none; z-index:0;
+    pointer-events:none;
+    z-index:0; /* behind everything */
 }
 </style>
 </head>
@@ -102,17 +109,15 @@ p {
 <!-- Overlay for autoplay -->
 <div id="overlay"></div>
 
-<div class="intro" id="intro">
-    A Surprise For My Meena 💙
-</div>
+<!-- Intro screen -->
+<div class="intro" id="intro">A Surprise For My Meena 💙</div>
 
+<!-- Main content -->
 <div class="container" id="main">
     <h1>Happy Birthday Emaan 💙</h1>
-
     <div class="photo">
         <img src="emaan.jpg" alt="Emaan">
     </div>
-
     <p>
         My Dearest Meena,<br><br>
         You are my peace, my happiness, and my forever.  
@@ -123,24 +128,25 @@ p {
     </p>
 </div>
 
-<!-- Background Music -->
+<!-- Background music -->
 <audio id="bgMusic" src="music.mp3" loop></audio>
 
 <!-- Fireworks canvas -->
 <canvas id="fireworks"></canvas>
 
 <script>
-// Autoplay music and start animations
+// Step 1: Tap overlay to start everything
 const overlay = document.getElementById("overlay");
 const music = document.getElementById("bgMusic");
 overlay.addEventListener("click", () => {
     overlay.style.display = "none";
     document.getElementById("intro").classList.add("fade");
-    document.getElementById("main").classList.add("show");
+    const main = document.getElementById("main");
+    main.classList.add("show");
     music.play().catch(err => console.log("Autoplay blocked:", err));
 });
 
-// Floating hearts
+// Step 2: Floating hearts
 function createHeart(){
     const heart = document.createElement("div");
     heart.classList.add("heart");
@@ -152,7 +158,7 @@ function createHeart(){
 }
 setInterval(createHeart,300);
 
-// Fireworks
+// Step 3: Fireworks
 const canvas = document.getElementById("fireworks");
 const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
@@ -177,9 +183,7 @@ class Firework{
         for(let i=0;i<40;i++) particles.push(new Particle(this.x,this.y));
         this.exploded = true;
     }
-    draw(){
-        if(!this.exploded){ ctx.fillStyle="#00c6ff"; ctx.beginPath(); ctx.arc(this.x,this.y,3,0,Math.PI*2); ctx.fill(); }
-    }
+    draw(){ if(!this.exploded){ ctx.fillStyle="#00c6ff"; ctx.beginPath(); ctx.arc(this.x,this.y,3,0,Math.PI*2); ctx.fill(); } }
 }
 class Particle{
     constructor(x,y){
@@ -190,8 +194,6 @@ class Particle{
     update(){ this.x+=this.vx; this.y+=this.vy; this.alpha-=0.02; }
     draw(){ ctx.globalAlpha=this.alpha; ctx.fillStyle="#00c6ff"; ctx.beginPath(); ctx.arc(this.x,this.y,this.size,0,Math.PI*2); ctx.fill(); ctx.globalAlpha=1; }
 }
-
-// Animate loop
 function animate(){
     ctx.fillStyle="rgba(15,32,39,0.2)";
     ctx.fillRect(0,0,canvas.width,canvas.height);
@@ -202,24 +204,19 @@ function animate(){
 }
 animate();
 
-// Cinematic fade-out finale after 25 seconds
+// Step 4: Cinematic fade-out finale after 25s
 setTimeout(()=>{
-    // Increase fireworks intensity for finale
     const finaleInterval = setInterval(()=>{
         for(let i=0;i<5;i++) fireworks.push(new Firework());
     },100);
-    // Fade out main content
     const container = document.getElementById("main");
-    container.style.transition = "opacity 5s ease";
-    container.style.opacity = 0;
-    // Fade out hearts
+    container.style.transition="opacity 5s ease";
+    container.style.opacity=0;
     const hearts = document.querySelectorAll(".heart");
-    hearts.forEach(h=>h.style.transition="opacity 5s ease");
-    hearts.forEach(h=>h.style.opacity=0);
-    // Stop finale after 5 seconds
+    hearts.forEach(h=>{h.style.transition="opacity 5s ease"; h.style.opacity=0;});
     setTimeout(()=>clearInterval(finaleInterval),5000);
 },25000);
-</script>
 
+</script>
 </body>
 </html>
