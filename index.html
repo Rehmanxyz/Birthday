@@ -8,14 +8,16 @@ body {
   margin:0; padding:0;
   background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
   font-family: 'Segoe UI',sans-serif;
-  overflow-x:hidden;
   text-align:center;
   color:white;
 }
 
-/* Full screen overlay for first tap */
+/* Overlay for first tap */
 #overlay {
-  position:fixed;top:0;left:0;width:100%;height:100%;z-index:10000;cursor:pointer;
+  position:fixed; top:0; left:0;
+  width:100%; height:100%;
+  z-index:10000;
+  cursor:pointer;
 }
 
 /* Main content */
@@ -23,28 +25,17 @@ body {
   margin-top:80px;
   opacity:0;
   transition:1.5s ease;
-  position:relative;
-  z-index:10002;
 }
 .container.show { opacity:1; }
 
-h1 { font-size:3em; animation: glow 2s infinite alternate; }
-@keyframes glow { from {text-shadow:0 0 10px #00c6ff;} to {text-shadow:0 0 40px #0072ff;} }
-
-p { max-width:600px;margin:20px auto;font-size:20px; }
+h1 { font-size:2.8em; color:#00c6ff; }
+p { max-width:600px; margin:20px auto; font-size:20px; }
 
 .photo img {
-  width:250px; height:250px; border-radius:50%; border:5px solid #00c6ff;
-  box-shadow:0 0 25px #00c6ff; animation:pulse 2s infinite;
+  width:250px; height:250px;
+  border-radius:50%; border:5px solid #00c6ff;
+  box-shadow:0 0 25px #00c6ff;
 }
-@keyframes pulse {0%{box-shadow:0 0 15px #00c6ff;}50%{box-shadow:0 0 40px #0072ff;}100%{box-shadow:0 0 15px #00c6ff;}}
-
-/* Floating hearts */
-.heart { position:fixed;color:#00c6ff;font-size:18px;z-index:10003;animation:float 6s linear infinite;}
-@keyframes float {from{transform:translateY(100vh);opacity:1;}to{transform:translateY(-10vh);opacity:0;}}
-
-/* Fireworks */
-#fireworks {position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;}
 </style>
 </head>
 <body>
@@ -56,63 +47,27 @@ p { max-width:600px;margin:20px auto;font-size:20px; }
   <div class="photo">
     <img src="emaan.jpg" alt="Emaan">
   </div>
-  <p>My Dearest Meena,<br><br>
-     You are my peace, my happiness, and my forever.<br>
-     Every heartbeat whispers your name.<br>
-     I love you endlessly. 💙<br><br>
-     — Yours always, Rehman
+  <p>
+    My Dearest Meena,<br><br>
+    You are my peace, my happiness, and my forever.<br>
+    Every heartbeat whispers your name.<br>
+    I love you endlessly. 💙<br><br>
+    — Yours always, Rehman
   </p>
 </div>
 
 <audio id="bgMusic" src="music.mp3" loop></audio>
-<canvas id="fireworks"></canvas>
 
 <script>
-// Step 1: First tap triggers everything
 const overlay = document.getElementById("overlay");
 const main = document.getElementById("main");
 const music = document.getElementById("bgMusic");
 
-overlay.addEventListener("click",()=>{
-  overlay.style.display="none";       // hide overlay
-  main.classList.add("show");          // show content
-  music.play().catch(e=>console.log("Autoplay blocked",e));
-  startHearts();
+overlay.addEventListener("click", ()=>{
+  overlay.style.display="none";      // hide overlay
+  main.classList.add("show");         // show content
+  music.play().catch(e=>console.log("Autoplay blocked", e));
 });
-
-// Step 2: Floating hearts
-function startHearts(){
-  setInterval(()=>{
-    const heart = document.createElement("div");
-    heart.className="heart";
-    heart.innerHTML="💙";
-    heart.style.left=Math.random()*100+"vw";
-    heart.style.fontSize=(Math.random()*20+10)+"px";
-    document.body.appendChild(heart);
-    setTimeout(()=>heart.remove(),6000);
-  },300);
-}
-
-// Step 3: Fireworks
-const canvas = document.getElementById("fireworks");
-const ctx = canvas.getContext("2d");
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-let fireworks=[], particles=[];
-function random(min,max){return Math.random()*(max-min)+min;}
-class Firework{constructor(){this.x=random(100,canvas.width-100);this.y=canvas.height;this.targetY=random(50,canvas.height/2);this.exploded=false;}
-update(){if(!this.exploded){this.y-=8;if(this.y<=this.targetY)this.explode();}}
-explode(){for(let i=0;i<40;i++)particles.push(new Particle(this.x,this.y));this.exploded=true;}
-draw(){if(!this.exploded){ctx.fillStyle="#00c6ff";ctx.beginPath();ctx.arc(this.x,this.y,3,0,Math.PI*2);ctx.fill();}}}
-class Particle{constructor(x,y){this.x=x;this.y=y;this.vx=random(-4,4);this.vy=random(-6,-2);this.alpha=1;this.size=3;}
-update(){this.x+=this.vx;this.y+=this.vy;this.alpha-=0.02;}
-draw(){ctx.globalAlpha=this.alpha;ctx.fillStyle="#00c6ff";ctx.beginPath();ctx.arc(this.x,this.y,this.size,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;}}
-function animate(){ctx.fillStyle="rgba(15,32,39,0.2)";ctx.fillRect(0,0,canvas.width,canvas.height);
-if(Math.random()<0.03)fireworks.push(new Firework());
-fireworks.forEach((f,i)=>{f.update();f.draw();if(f.exploded)fireworks.splice(i,1);});
-particles.forEach((p,i)=>{p.update();p.draw();if(p.alpha<=0)particles.splice(i,1);});
-requestAnimationFrame(animate);}
-animate();
 </script>
 
 </body>
