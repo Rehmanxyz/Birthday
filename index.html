@@ -124,26 +124,23 @@ p {
 </div>
 
 <!-- Background Music -->
-<audio id="bgMusic" src="music.mp3" loop></audio>
+<audio id="bgMusic" src="music.mp3" loop autoplay muted></audio>
 
 <script>
-setTimeout(() => {
-    document.getElementById("intro").classList.add("fade");
-    document.getElementById("main").classList.add("show");
-    document.getElementById("bgMusic").play();
-}, 2500);
+window.onload = function() {
+    // Show intro and main content
+    setTimeout(() => {
+        document.getElementById("intro").classList.add("fade");
+        document.getElementById("main").classList.add("show");
 
-function createHeart() {
-    const heart = document.createElement("div");
-    heart.classList.add("heart");
-    heart.innerHTML = "💙";
-    heart.style.left = Math.random() * 100 + "vw";
-    heart.style.fontSize = Math.random() * 20 + 10 + "px";
-    document.body.appendChild(heart);
-    setTimeout(() => heart.remove(), 6000); 
+        // Try to play music
+        const music = document.getElementById("bgMusic");
+        music.muted = false; // unmute after page load
+        music.play().catch((err) => {
+            console.log("Autoplay blocked:", err);
+        });
+    }, 2500);
 }
-
-setInterval(createHeart, 300);
 </script>
 
 </body>
